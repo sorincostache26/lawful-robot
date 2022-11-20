@@ -1,18 +1,21 @@
 const {By,Key,Builder,until} = require("selenium-webdriver");
 
-require("geckodriver");
-const firefox = require('selenium-webdriver/firefox');
+require("chromedriver");
+const chromeDriver = require("selenium-webdriver/chrome");
+const webdriver = require("selenium-webdriver");
 
 async function cdepDownload(){
+    var options = new chromeDriver.Options();
+    options.setUserPreferences({
+        "always_open_pdf_externally": true
+    });
+    options.addArguments("start-maximized","disable-extensions","disable-infobars");
 
-let firefoxOptions = new firefox.Options();
-firefoxOptions.setPreference("browser.download.folderList",2);
-firefoxOptions.setPreference("pdfjs.disabled", true);
-firefoxOptions.setPreference("browser.download.dir", "C:\\Automation\\bm\\downloads");
-let driver = new Builder()
-.forBrowser('firefox')
-.setFirefoxOptions(firefoxOptions)
-.build();
+    var driver = new webdriver.Builder()
+    .withCapabilities(webdriver.Capabilities.chrome())
+    .forBrowser("chrome")
+    .setChromeOptions(options)
+    .build();
 
 
        var url = "http://cdep.ro/pls/caseta/eCaseta2015.OrdineZi";
@@ -25,11 +28,10 @@ let driver = new Builder()
        var dismissCookies = '[aria-label="dismiss cookie message"]';
 
 
-        
+
         await driver.get(url);
         await driver.findElement(By.css(dismissCookies)).click();
         await driver.get(url);
-        await driver.sleep(1000);
         await driver.findElement(By.css(pageLogo));
  
         let lawFolder = await driver.findElement(By.css(folderIcon));
@@ -38,17 +40,17 @@ let driver = new Builder()
 
         let plNumberHolder = await driver.findElement(By.css(plNumberText));
         await driver.wait(until.elementIsVisible(plNumberHolder),1000);
-        driver.executeScript("window.scrollBy(0, 350)", "");
-
         console.log('plNumber is: ', await plNumberHolder.getText());
         
         await driver.switchTo().frame(driver.findElement(By.css('#frame4')));
         
         let pdfToDownload = await driver.findElement(By.css(pdfIcon));
         await driver.wait(until.elementIsVisible(pdfToDownload),1000);
+        await driver.sleep(2000);
         await pdfToDownload.click();
-        await driver.sleep(4000);
+        await driver.sleep(7000);
  
+        //It is always a safe practice to quit the browser after execution
         await driver.quit();
  
 }
