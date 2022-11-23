@@ -14,18 +14,18 @@ let driver = new Builder()
 .setFirefoxOptions(firefoxOptions)
 .build();
 
+       var url = "http://cdep.ro/pls/caseta/ecaseta2015.OrdineZi?oid=2405";
 
-       var url = "http://cdep.ro/pls/caseta/eCaseta2015.OrdineZi";
-
-       //selectors
-       var folderIcon = "[name='img4']";
-       var pdfIcon = "a[href*='comisii/administratie'] [alt='PDF format']";
-       var plNumberText = "a[href*='upl_pck2015.proiect?idp=20292']";
+       //selectors fragile
+       var folderIcon = "[name='img3']";
+       var plNumberText = "a[href*='uph_pck2015.proiect?idp=1044']";
+       var iFrameId = '#frame3';
+       var pdfIcon = "a[href*='/pls/proiecte/docs/2022/ph081_solmjus.pdf']";
+       
+       //selectors stable
        var pageLogo = "[alt='Camera Deputatilor']";
        var dismissCookies = '[aria-label="dismiss cookie message"]';
-
-
-        
+       
         await driver.get(url);
         await driver.findElement(By.css(dismissCookies)).click();
         await driver.get(url);
@@ -38,11 +38,10 @@ let driver = new Builder()
 
         let plNumberHolder = await driver.findElement(By.css(plNumberText));
         await driver.wait(until.elementIsVisible(plNumberHolder),1000);
-        driver.executeScript("window.scrollBy(0, 350)", "");
-
+        driver.executeScript("window.scrollBy(0, 450)", "");
         console.log('plNumber is: ', await plNumberHolder.getText());
         
-        await driver.switchTo().frame(driver.findElement(By.css('#frame4')));
+        await driver.switchTo().frame(driver.findElement(By.css(iFrameId)));
         
         let pdfToDownload = await driver.findElement(By.css(pdfIcon));
         await driver.wait(until.elementIsVisible(pdfToDownload),1000);
