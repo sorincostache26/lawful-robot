@@ -21,7 +21,7 @@ async function cdepDownload(){
        var url = "http://cdep.ro/pls/caseta/eCaseta2015.OrdineZi";
 
        //selectors
-       var folderIcon = "[name='img4']";
+       var folderIcon = "[name='img5']";
        var pdfIcon = "a[href*='comisii/administratie'] [alt='PDF format']";
        var plNumberText = "a[href*='upl_pck2015.proiect?idp=20292']";
        var pageLogo = "[alt='Camera Deputatilor']";
@@ -42,7 +42,7 @@ async function cdepDownload(){
         await driver.wait(until.elementIsVisible(plNumberHolder),1000);
         console.log('plNumber is: ', await plNumberHolder.getText());
         
-        await driver.switchTo().frame(driver.findElement(By.css('#frame4')));
+        await driver.switchTo().frame(driver.findElement(By.css('#frame5')));
         
         let pdfToDownload = await driver.findElement(By.css(pdfIcon));
         await driver.wait(until.elementIsVisible(pdfToDownload),1000);

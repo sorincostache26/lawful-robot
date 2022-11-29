@@ -1,0 +1,14 @@
+{
+    "cdep": [
+      {
+        "lawProject": {
+          "name": "initial",
+          "data": [
+            {
+              "link": "base link"
+            }
+          ]
+        }
+      }
+    ]
+}
