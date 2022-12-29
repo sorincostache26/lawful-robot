@@ -3,11 +3,9 @@ const fs = require('fs');
 require("geckodriver");
 const firefox = require('selenium-webdriver/firefox');
 
-// code review - change variable names
-//TODO: modify - either send it as API call or change JSON write location.
-// only add free range if not empty.
-// legea 3 din https://www.cdep.ro/pls/caseta/eCaseta2015.OrdineZi?dat=20221207 are 2 legi in una
-// updated to latest dependencies. add linter. driver builder to be extracted as a function 
+//TODO modify - either send it as API call or change JSON write location.
+//TODO only add free range if not empty?
+//TODO law 3 from https://www.cdep.ro/pls/caseta/eCaseta2015.OrdineZi?dat=20221207 has 2 laws inside it
 
 async function main() {  
 //selectors
@@ -83,18 +81,22 @@ for( element of (await getAllFolders(driver))){
   await driver.switchTo().defaultContent();
 }
 
-// free range pdfs
+//free range pdfs
 var newJsonForFreeRange = JSON.parse(jsonTemplate);
 newJsonForFreeRange.lawProject.name = await Promise.resolve('Free-range PDFs') ;
 await getAllPdfs(driver, newJsonForFreeRange, pdfTemplate);
 jsonObj.push(await Promise.resolve(newJsonForFreeRange));
 
-// Full PDF
+//Full PDF
 cdepJson.cdep = jsonObj;
 console.log(JSON.stringify(cdepJson,null,'\t'));
 
-//TODO: modify - either send it as API call or change JSON write location.
-// Write JSON in file.
+//write file
+if (!fs.existsSync('../downloads/')){
+  fs.mkdirSync('../downloads/');
+}
+//TODO modify - either send it as API call or change JSON write location.
+//Write JSON in file.
 fs.writeFile('../downloads/cdep.txt', JSON.stringify(cdepJson,null,'\t'), err => {
   if (err) console.error(err);
 });

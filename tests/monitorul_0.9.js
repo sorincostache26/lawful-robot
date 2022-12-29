@@ -71,6 +71,10 @@ for( part of (await getAllParts(driver))){
 monitorJson["monitorul oficial"] = jsonObj;
 console.log(JSON.stringify(monitorJson,null,'\t'));
 
+//write file
+if (!fs.existsSync('../downloads/')){
+  fs.mkdirSync('../downloads/');
+}
 fs.writeFile('../downloads/monitorul.txt', JSON.stringify(monitorJson,null,'\t'), err => {
   if (err) console.error(err);
 });
