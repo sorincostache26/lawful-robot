@@ -83,7 +83,7 @@ await driver.quit();
 }
 
 function DriverBuilder() {
-  let firefoxOptions = new firefox.Options();
+  let firefoxOptions = new firefox.Options().headless();
   firefoxOptions.setPreference("browser.download.folderList", 2);
   firefoxOptions.setPreference("pdfjs.disabled", true);
   firefoxOptions.setPreference("browser.download.dir", "../downloads");

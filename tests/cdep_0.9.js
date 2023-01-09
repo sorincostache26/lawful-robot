@@ -9,7 +9,7 @@ const firefox = require('selenium-webdriver/firefox');
 
 async function main() {  
 //selectors
-var url = "https://www.cdep.ro/pls/caseta/eCaseta2015.OrdineZi?dat=20221207";
+var url = "https://www.cdep.ro/pls/caseta/eCaseta2015.OrdineZi";
 var url_real = "https://www.cdep.ro/pls/caseta/eCaseta2015.OrdineZi";
 var url_withFreeRange = "https://www.cdep.ro/pls/caseta/eCaseta2015.OrdineZi?dat=20221207";
 var url_withUndefinedPDFs = "https://www.cdep.ro/pls/caseta/ecaseta2015.OrdineZi?oid=2419";
@@ -17,7 +17,7 @@ var pageLogo = "[alt='Camera Deputatilor']";
 var dismissCookiesButton = '[aria-label="dismiss cookie message"]';
 var decisionNameField = 'body[bgcolor] >p b';
 var lawNameField = 'tbody table tbody >tr td b';
-var pdfTable = 'table table tbody tr[align]';
+var pdfTable = 'tbody tr[valign] td:first-child tr[align]';
 var pdfDateRelative = 'td.headlinetext1';
 var pdfNameRelative = 'td:nth-child(2)';
 var pdfLinkRelative = 'td a[href]';
@@ -105,7 +105,7 @@ await driver.quit();
 }
 
 function DriverBuilder() {
-  let firefoxOptions = new firefox.Options();
+  let firefoxOptions = new firefox.Options().headless();
   firefoxOptions.setPreference("browser.download.folderList", 2);
   firefoxOptions.setPreference("pdfjs.disabled", true);
   firefoxOptions.setPreference("browser.download.dir", "../downloads");
