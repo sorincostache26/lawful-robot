@@ -3,10 +3,6 @@ const fs = require('fs');
 require("geckodriver");
 const firefox = require('selenium-webdriver/firefox');
 
-//TODO modify - either send it as API call or change JSON write location.
-//TODO only add free range if not empty?
-//TODO law 3 from https://www.cdep.ro/pls/caseta/eCaseta2015.OrdineZi?dat=20221207 has 2 laws inside it
-
 async function main() {  
 //selectors
 var url = "https://www.cdep.ro/pls/caseta/eCaseta2015.OrdineZi";
@@ -95,7 +91,6 @@ console.log(JSON.stringify(cdepJson,null,'\t'));
 if (!fs.existsSync('../downloads/')){
   fs.mkdirSync('../downloads/');
 }
-//TODO modify - either send it as API call or change JSON write location.
 //Write JSON in file.
 fs.writeFile('../downloads/cdep.txt', JSON.stringify(cdepJson,null,'\t'), err => {
   if (err) console.error(err);

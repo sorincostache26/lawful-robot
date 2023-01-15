@@ -8,7 +8,7 @@ async function main() {
   var url = "https://sgg.gov.ro/1/anunturi-proiecte-de-acte-normative/";
   var pageLoaded = '#footer-col1 .footer-widget-title';
   var panel = '.panel-body .pt-cv-content *';
-
+  var yearPanel = '.panel-title';
 let driver = DriverBuilder();
 
 //JSON init
@@ -23,6 +23,9 @@ var pdfTemplate = fs.readFileSync('./helpers/pdfTemplate.json');
 //Load Page
 await driver.get(url);
 await driver.findElement(By.css(pageLoaded));
+var currentYear = (await driver.findElement(By.css(yearPanel)).getText());
+currentYear = currentYear.slice(-4,currentYear.length);
+console.log('current year is -->'+ currentYear+'<--')
 
 var oneTrueJson = JSON.parse(jsonTemplate);
 oneTrueJson.lawProject.name = 'all of them' ;
@@ -34,9 +37,11 @@ for( row of (await getAllElements(driver, panel))){
   catch{
     try{
       await row.findElement(By.css(' ul li'));
-
-      var temp = await (await row.findElement(By.css('ul a[href*=".pdf"]'))).getAttribute('href');
-      console.log('-------RABBIT is: ' + await temp);
+      var notNota = ':not([href*="nota"]):not([href*="Nota"]):not([href*="NOTA"]):not([href*="NF"])';
+      var notAnunt = ':not([href*="ANUNT"]):not([href*="Anunt"]):not([href*="anunt"])';
+      var notExtra = ':not([href*="motive"]):not([href*="MOTIVE"]):not([href*="Anexa"])';
+      var notSkipped = ':not([href*="Registru"])';
+      var temp = await (await row.findElement(By.css('ul a[href*=".pdf"]' + notNota + notAnunt + notExtra))).getAttribute('href');
       oneTrueJson.lawProject.pdf[oneTrueJson.lawProject.pdf.length - 1].link = temp;
       continue;
     }
@@ -53,13 +58,11 @@ for( row of (await getAllElements(driver, panel))){
     if(currentTitle !== ''){
       console.log(currentTitle);
       await oneTrueJson.lawProject.pdf.push(JSON.parse(pdfTemplate));  
-      oneTrueJson.lawProject.pdf[oneTrueJson.lawProject.pdf.length - 1].name = currentTitle;
-    }
-
+      oneTrueJson.lawProject.pdf[oneTrueJson.lawProject.pdf.length - 1].name = getStringFromTitle(currentTitle, currentYear);
+      oneTrueJson.lawProject.pdf[oneTrueJson.lawProject.pdf.length - 1].date = getDatefromTitle(currentTitle,currentYear);
+    }  
+  }catch{
   }
-  catch{
-  }
-
 }
 
 jsonObj.push(await Promise.resolve(oneTrueJson));
@@ -90,22 +93,27 @@ function DriverBuilder() {
 }
 
 function getAllElements(driver, container){
-    return driver.findElements(By.css(container)).then(function(element){
-        var allPromises = element.map(function(element){
-            return element;
-        });
-        return Promise.all(allPromises);
-    });     
-  }
+  return driver.findElements(By.css(container)).then(function(element){
+      var allPromises = element.map(function(element){
+          return element;
+      });
+      return Promise.all(allPromises);
+  });     
+}
 
 async function buildTitle(row){
   var titleString = '';
   titleString += await row.getText();
-  // for(childElement of (await getAllElements(driver, row.findElements(By.css('>*'))))){
-  //   titleString += childElement.getText();
-  //   console.log("inner in");
-  // }
   return titleString;
+}
+
+function getDatefromTitle(rawTitle, currentYear){
+  var pre = "." + currentYear;
+  return rawTitle.split(pre)[0] + pre;
+}
+function getStringFromTitle(rawTitle, currentYear){
+  var pre = "." + currentYear;
+  return rawTitle.split(pre)[1];
 }
 
 main()
