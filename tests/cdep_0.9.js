@@ -79,7 +79,7 @@ for( element of (await getAllFolders(driver))){
 
 //free range pdfs
 var newJsonForFreeRange = JSON.parse(jsonTemplate);
-newJsonForFreeRange.lawProject.name = await Promise.resolve('Free-range PDFs') ;
+newJsonForFreeRange.lawProject.name = 'Free-range PDFs';
 await getAllPdfs(driver, newJsonForFreeRange, pdfTemplate);
 jsonObj.push(await Promise.resolve(newJsonForFreeRange));
 

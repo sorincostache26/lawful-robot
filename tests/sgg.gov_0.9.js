@@ -2,6 +2,7 @@ const {By,Key,Builder,until, WebElement} = require("selenium-webdriver");
 const fs = require('fs');
 require("geckodriver");
 const firefox = require('selenium-webdriver/firefox');
+const { isNull } = require("util");
 
 async function main() {  
    //selectors
@@ -58,7 +59,7 @@ for( row of (await getAllElements(driver, panel))){
     if(currentTitle !== ''){
       console.log(currentTitle);
       await oneTrueJson.lawProject.pdf.push(JSON.parse(pdfTemplate));  
-      oneTrueJson.lawProject.pdf[oneTrueJson.lawProject.pdf.length - 1].name = getStringFromTitle(currentTitle, currentYear);
+      oneTrueJson.lawProject.pdf[oneTrueJson.lawProject.pdf.length - 1].name = getNameFromTitle(currentTitle, currentYear);
       oneTrueJson.lawProject.pdf[oneTrueJson.lawProject.pdf.length - 1].date = getDatefromTitle(currentTitle,currentYear);
     }  
   }catch{
@@ -111,9 +112,16 @@ function getDatefromTitle(rawTitle, currentYear){
   var pre = "." + currentYear;
   return rawTitle.split(pre)[0] + pre;
 }
-function getStringFromTitle(rawTitle, currentYear){
+
+function getNameFromTitle(rawTitle, currentYear){
   var pre = "." + currentYear;
-  return rawTitle.split(pre)[1];
+  var extractedString = (rawTitle.split(pre)[1]);
+  extractedString = extractedString.replaceAll('(.pdf)','').replaceAll('(.pdf )','').replaceAll('(pdf)','');
+  extractedString = extractedString.replaceAll('(.doc /.pdf)','').replaceAll('(.pdf/ .doc)','').replaceAll('(.pdf / .docx)','');
+  extractedString = extractedString.replaceAll('(doc)','').replaceAll('(.docx)','').replaceAll('(.docx )','').replaceAll('(.doc)','').replaceAll('(docx)','');
+  extractedString = extractedString.trim();
+
+  return extractedString;
 }
 
 main()
