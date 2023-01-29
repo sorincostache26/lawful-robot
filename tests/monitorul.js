@@ -31,7 +31,7 @@ await driver.findElement(By.css(pageLoaded));
 // day selector - use this for testing a different day.
 // await driver.sleep(2000);
 // driver.executeScript("window.scrollBy(0, 450)", "");
-// await driver.findElement(By.css('td[data-date="1671148800000"]')).click();
+// await driver.findElement(By.css('td[data-date="1674086400000"]')).click();
 // await driver.sleep(2000);
 
 //find current date
@@ -57,7 +57,7 @@ for( part of (await getAllParts(driver))){
     newJson.lawProject.pdf.push(JSON.parse(pdfTemplate));
     newJson.lawProject.pdf[newJson.lawProject.pdf.length -1].name  = await aLink.getText();
     newJson.lawProject.pdf[newJson.lawProject.pdf.length -1].link = await aLink.getAttribute('href');
-    newJson.lawProject.pdf[newJson.lawProject.pdf.length -1].date = today;
+    newJson.lawProject.pdf[newJson.lawProject.pdf.length -1].date = formatDate(today);
 
     console.log(JSON.stringify(await newJson.lawProject.pdf[newJson.lawProject.pdf.length -1],null,'\t'));
   }
@@ -102,6 +102,22 @@ var allParts = "div#showmo .card-body";
       });
       return Promise.all(allPromises);
   });     
+}
+
+function formatDate(date) {
+  if (!date || date == 'undefined') {
+    return date;
+  }
+
+  let dateArray = date.split("-");
+  let day = dateArray[0];
+  let month = dateArray[1];
+  let year = dateArray[2];
+  
+  let dayString = day.toString().padStart(2, '0');
+  let monthString = month.toString().padStart(2, '0');
+  
+  return `${dayString}-${monthString}-${year}`;
 }
 
 main()

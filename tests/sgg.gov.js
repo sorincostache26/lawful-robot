@@ -60,7 +60,7 @@ for( row of (await getAllElements(driver, panel))){
       console.log(currentTitle);
       await oneTrueJson.lawProject.pdf.push(JSON.parse(pdfTemplate));  
       oneTrueJson.lawProject.pdf[oneTrueJson.lawProject.pdf.length - 1].name = getNameFromTitle(currentTitle, currentYear);
-      oneTrueJson.lawProject.pdf[oneTrueJson.lawProject.pdf.length - 1].date = getDatefromTitle(currentTitle,currentYear);
+      oneTrueJson.lawProject.pdf[oneTrueJson.lawProject.pdf.length - 1].date = formatDate(getDatefromTitle(currentTitle,currentYear));
     }  
   }catch{
   }
@@ -122,6 +122,13 @@ function getNameFromTitle(rawTitle, currentYear){
   extractedString = extractedString.trim();
 
   return extractedString;
+}
+
+function formatDate(date) {
+  if (!date || date == 'undefined') {
+    return date;
+  }
+  return date.split('.').join('-');
 }
 
 main()

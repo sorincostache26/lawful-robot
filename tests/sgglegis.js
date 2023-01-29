@@ -35,7 +35,7 @@ for( row of (await getAllTitles(driver, titlesRows))){
   newJson.lawProject.pdf[0].name = await title.getText();
   newJson.lawProject.pdf[0].link = await title.getAttribute('href');
   newJson.lawProject.pdf[0].date = "undefined";
-  
+    
   let initiator = await row.findElement(By.css("td:first-child a"));
   newJson.lawProject.name = await initiator.getText();
   
@@ -76,5 +76,4 @@ function getAllTitles(driver, titlesRows){
         return Promise.all(allPromises);
     });     
   }
-
 main()

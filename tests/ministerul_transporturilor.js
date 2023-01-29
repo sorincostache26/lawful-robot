@@ -40,7 +40,7 @@ for( row of (await getElementsList(driver, titlesRows))){
 
   await driver.wait(until.elementsLocated(By.css('td[headers="categorylist_header_title"] a')),2000);
   newJson.lawProject.pdf[newJson.lawProject.pdf.length -1].name = await row.findElement(By.css('td[headers="categorylist_header_title"] a')).getText();
-  newJson.lawProject.pdf[newJson.lawProject.pdf.length -1].date = await row.findElement(By.css('td[headers="categorylist_header_date"]')).getText();
+  newJson.lawProject.pdf[newJson.lawProject.pdf.length -1].date = formatDate(await row.findElement(By.css('td[headers="categorylist_header_date"]')).getText());
   
   await row.findElement(By.css('td[headers="categorylist_header_title"] a')).sendKeys(Key.chord(Key.CONTROL, Key.ENTER));
   await driver.wait(async () => (await driver.getAllWindowHandles()).length === 2, 10000);
@@ -96,6 +96,23 @@ function getElementsList(driver, titlesRows){
       });
       return Promise.all(allPromises);
   });     
+}
+
+function formatDate(date) {
+  if (!date || date == 'undefined') {
+    return date;
+  }
+
+  let dateArray = date.split(" ");
+  let day = dateArray[0];
+  let month = dateArray[1];
+  let year = dateArray[2];
+  
+  let months = ["Ianuarie", "Februarie", "Martie", "Aprilie", "Mai", "Iunie", "Iulie", "August", "Septembrie", "Octombrie", "Noiembrie", "Decembrie"];
+  let monthNumber = months.indexOf(month) + 1;
+  let monthString = monthNumber.toString().padStart(2, '0');
+  
+  return `${day}-${monthString}-${year}`;
 }
 
 main()
